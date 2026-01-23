@@ -13,14 +13,19 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
+          if [ -z "$HF_TOKEN" ]; then
+            echo "Error: HF_TOKEN is not set. Please add it to your GitHub repository secrets."
+            exit 1
+          fi
           # Create a temporary directory for the HF space
           mkdir -p hf_space
           cp -r ml_service/* hf_space/
           cd hf_space
           git init
+          git checkout -b main
           git config user.name "GitHub Action"
           git config user.email "action@github.com"
           git add .
           git commit -m "Sync from GitHub"
           # Replace with your actual Space details
-          git push --force https://x-token:$HF_TOKEN@huggingface.co/spaces/your-username/my_study_assistant main
+          git push --force https://x-token:$HF_TOKEN@huggingface.co/spaces/lemigobena1/my_study_assistant main
