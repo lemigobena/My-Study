@@ -38,7 +38,3 @@ ML Service (`/ml_service`)
 3. Install dependencies: `pip install -r requirements.txt` (or install FastAPI, transformers, torch, spacy)
 4. Download SpaCy model: `python -m spacy download en_core_web_sm`
 5. Run service: `python main.py`
----
-
-## 📝 License
-ISC
