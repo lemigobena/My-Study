@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
@@ -11,9 +11,9 @@ const Register = () => {
     const handleRegister = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:3000/api/auth/register', { name, email, password });
+            await api.post('/auth/register', { name, email, password });
             // Auto-login after registration
-            const loginRes = await axios.post('http://localhost:3000/api/auth/login', { email, password });
+            const loginRes = await api.post('/auth/login', { email, password });
             localStorage.setItem('token', loginRes.data.token);
             navigate('/dashboard');
         } catch (err) {

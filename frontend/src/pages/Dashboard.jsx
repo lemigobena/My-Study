@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Modal from '../components/Modal';
 
@@ -16,14 +16,9 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const token = localStorage.getItem('token');
                 const [notesRes, quizzesRes] = await Promise.all([
-                    axios.get('http://localhost:3000/api/notes', {
-                        headers: { Authorization: `Bearer ${token}` }
-                    }),
-                    axios.get('http://localhost:3000/api/quizzes', {
-                        headers: { Authorization: `Bearer ${token}` }
-                    })
+                    api.get('/notes'),
+                    api.get('/quizzes')
                 ]);
                 setNotes(notesRes.data);
                 setQuizzes(quizzesRes.data);
@@ -41,10 +36,8 @@ const Dashboard = () => {
 
     const handleGenerateQuiz = async () => {
         try {
-            const token = localStorage.getItem('token');
-            const res = await axios.post('http://localhost:3000/api/quizzes/generate',
-                { noteId: selectedNoteId, numQuestions: parseInt(numQuestions) },
-                { headers: { Authorization: `Bearer ${token}` } }
+            const res = await api.post('/quizzes/generate',
+                { noteId: selectedNoteId, numQuestions: parseInt(numQuestions) }
             );
             setModalOpen(false);
             navigate(`/quiz/${res.data.id}`);
@@ -56,10 +49,7 @@ const Dashboard = () => {
     const deleteNote = async (id) => {
         if (!confirm('Are you sure?')) return; // Could replace this with modal too, but leaving for speed
         try {
-            const token = localStorage.getItem('token');
-            await axios.delete(`http://localhost:3000/api/notes/${id}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            await api.delete(`/notes/${id}`);
             setNotes(notes.filter(n => n.id !== id));
         } catch (err) {
             alert('Error deleting note');

@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { useParams, useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import Modal from '../components/Modal';
@@ -21,10 +21,7 @@ const NoteEditor = () => {
         if (id) {
             const fetchNote = async () => {
                 try {
-                    const token = localStorage.getItem('token');
-                    const res = await axios.get(`http://localhost:3000/api/notes/${id}`, {
-                        headers: { Authorization: `Bearer ${token}` }
-                    });
+                    const res = await api.get(`/notes/${id}`);
                     setTitle(res.data.title);
                     setContent(res.data.content);
                     setSummary(res.data.summary);
@@ -44,23 +41,14 @@ const NoteEditor = () => {
     const handleSave = async () => {
         setLoading(true);
         try {
-            const token = localStorage.getItem('token');
             if (id) {
-                await axios.put(`http://localhost:3000/api/notes/${id}`,
-                    { title, content },
-                    { headers: { Authorization: `Bearer ${token}` } }
-                );
+                await api.put(`/notes/${id}`, { title, content });
                 setModalMessage('Note updated successfully!');
-                const res = await axios.get(`http://localhost:3000/api/notes/${id}`, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+                const res = await api.get(`/notes/${id}`);
                 setSummary(res.data.summary);
                 setModalOpen(true);
             } else {
-                await axios.post('http://localhost:3000/api/notes',
-                    { title, content },
-                    { headers: { Authorization: `Bearer ${token}` } }
-                );
+                await api.post('/notes', { title, content });
                 navigate('/dashboard');
             }
         } catch (err) {
@@ -80,11 +68,9 @@ const NoteEditor = () => {
         setUploading(true); // Start loading UI
 
         try {
-            const token = localStorage.getItem('token');
-            const res = await axios.post('http://localhost:3000/api/upload', formData, {
+            const res = await api.post('/upload', formData, {
                 headers: {
-                    'Content-Type': 'multipart/form-data',
-                    Authorization: `Bearer ${token}`
+                    'Content-Type': 'multipart/form-data'
                 }
             });
             setContent(res.data.text);

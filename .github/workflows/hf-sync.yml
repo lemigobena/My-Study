@@ -1,0 +1,26 @@
+name: Sync to Hugging Face Hub
+on:
+  push:
+    branches: [main]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Push to HF
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          # Create a temporary directory for the HF space
+          mkdir -p hf_space
+          cp -r ml_service/* hf_space/
+          cd hf_space
+          git init
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+          git add .
+          git commit -m "Sync from GitHub"
+          # Replace with your actual Space details
+          git push --force https://x-token:$HF_TOKEN@huggingface.co/spaces/your-username/your-space-name main

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const Quiz = () => {
@@ -15,10 +15,7 @@ const Quiz = () => {
     useEffect(() => {
         const fetchQuiz = async () => {
             try {
-                const token = localStorage.getItem('token');
-                const res = await axios.get(`http://localhost:3000/api/quizzes/${id}`, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+                const res = await api.get(`/quizzes/${id}`);
                 setQuiz(res.data);
             } catch (err) {
                 console.error(err);
@@ -31,11 +28,7 @@ const Quiz = () => {
         const submitScore = async () => {
             if (showScore && quiz) {
                 try {
-                    const token = localStorage.getItem('token');
-                    await axios.put(`http://localhost:3000/api/quizzes/${id}/submit`,
-                        { score },
-                        { headers: { Authorization: `Bearer ${token}` } }
-                    );
+                    await api.put(`/quizzes/${id}/submit`, { score });
                 } catch (err) {
                     console.error('Error submitting score:', err);
                 }
@@ -96,11 +89,7 @@ const Quiz = () => {
                                 onClick={async () => {
                                     // Ensure score is submitted before navigating
                                     try {
-                                        const token = localStorage.getItem('token');
-                                        await axios.put(`http://localhost:3000/api/quizzes/${id}/submit`,
-                                            { score },
-                                            { headers: { Authorization: `Bearer ${token}` } }
-                                        );
+                                        await api.put(`/quizzes/${id}/submit`, { score });
                                         console.log('Score submitted successfully');
                                     } catch (err) {
                                         console.error('Error submitting score:', err);
