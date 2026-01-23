@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+
+  subjects Subject[]
+  notes    Note[]
+  quizzes  Quiz[]
+}
+
+model Subject {
+  id        Int      @id @default(autoincrement())
+  name      String
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  notes     Note[]
+  createdAt DateTime @default(now())
+}
+
+model Note {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String
+  summary   String? // AI Generated summary
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  subjectId Int?
+  subject   Subject? @relation(fields: [subjectId], references: [id])
+  quizzes   Quiz[]
+  createdAt DateTime @default(now())
+}
+
+model Quiz {
+  id        Int        @id @default(autoincrement())
+  title     String
+  score     Int?
+  userId    Int
+  user      User       @relation(fields: [userId], references: [id])
+  noteId    Int?
+  note      Note?      @relation(fields: [noteId], references: [id])
+  questions Question[]
+  createdAt DateTime   @default(now())
+}
+
+model Question {
+  id            Int      @id @default(autoincrement())
+  quizId        Int
+  quiz          Quiz     @relation(fields: [quizId], references: [id])
+  questionText  String
+  options       String[] // Stored as JSON or array of strings
+  correctAnswer String
+}
