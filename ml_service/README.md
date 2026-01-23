@@ -3,7 +3,7 @@ title: AI Study Assistant ML
 emoji: 🧠
 colorFrom: blue
 colorTo: indigo
-sdk: fastapi
+sdk: docker
 app_file: main.py
 pinned: false
 ---
