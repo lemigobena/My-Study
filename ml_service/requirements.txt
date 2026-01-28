@@ -1,9 +1,9 @@
 fastapi
 uvicorn
 pydantic
-spacy
-transformers
-torch
+spacy==3.7.5
+transformers>=4.36.0
+torch>=2.1.0
 typing-extensions
 python-multipart
 # For spacy model
