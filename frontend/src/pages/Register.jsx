@@ -17,7 +17,9 @@ const Register = () => {
             localStorage.setItem('token', loginRes.data.token);
             navigate('/dashboard');
         } catch (err) {
-            alert('Error registering');
+            console.error('Registration error:', err);
+            const errorMessage = err.response?.data?.message || 'Error registering';
+            alert(errorMessage);
         }
     };
 
