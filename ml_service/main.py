@@ -32,7 +32,7 @@ try:
     # Actually, let's stick to a known working small one or base. Base is ~800MB. 
     # Let's use valhalla/t5-small-qg-hl if possible, but mrm8488 is simpler to use (answer aware).
     # To be safe on resource, let's try the base one, but handle OOM.
-    qg_tokenizer = AutoTokenizer.from_pretrained(qg_model_name)
+    qg_tokenizer = AutoTokenizer.from_pretrained(qg_model_name, legacy=False)
     qg_model = AutoModelForSeq2SeqLM.from_pretrained(qg_model_name)
     print("QG Model loaded.")
 except Exception as e:

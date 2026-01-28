@@ -3,6 +3,7 @@ uvicorn
 pydantic
 spacy==3.7.5
 transformers>=4.36.0
+accelerate
 torch>=2.1.0
 typing-extensions
 python-multipart
